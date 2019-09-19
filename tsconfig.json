@@ -6,8 +6,6 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "experimentalDecorators": true,
-    "strict": true,
-    "noImplicitAny": false,
     "typeRoots": [
       "node_modules/@types"
     ]
