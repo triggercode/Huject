@@ -60,11 +60,11 @@ export class ContainerResolver {
    * @param strict
    */
   public resolve(definition: string | Function, method?: FactoryMethod, constructorArgs?: Array<any>, strict = true): any {
-    let internalDefinition: Definition = null;
+    let internalDefinition: Definition | null = null;
     // bind autofactories to factory auto proxy instance
     if (typeof definition === "function" && Reflect.hasOwnMetadata("inject:autofactory", definition)) {
       let factoryProxy = new FactoryAutoProxy(this, definition);
-      internalDefinition = new Definition(definition, factoryProxy, null, FactoryMethod.OBJECT);
+      internalDefinition = new Definition(definition, factoryProxy, undefined, FactoryMethod.OBJECT);
     } else {
       internalDefinition = this.definitions.get(definition);
     }
@@ -78,7 +78,7 @@ export class ContainerResolver {
     }
 
     let constructor = this.resolveDefinition(internalDefinition);
-    let constructorArguments = [];
+    let constructorArguments: any[] = [];
 
     if (internalDefinition.definitionObjectType !== DefinitionObjectType.CALLABLE && internalDefinition.method !== FactoryMethod.OBJECT) {
       if (typeof constructorArgs !== 'undefined' && constructorArgs.length > 0) {
@@ -182,11 +182,11 @@ export class ContainerResolver {
    * @param strict
    */
   private resolveConstructorArguments(definition: Definition, constructor: Function, strict = true): Array<any> {
-    let constructorArguments = [];
+    let constructorArguments: any[] | undefined = [];
     if (Reflect.hasOwnMetadata("inject:constructor", constructor)) {
       // Resolve constructor dependencies
       let dependencies = Reflect.getOwnMetadata("design:paramtypes", constructor);
-      let resolvedDeps = [];
+      let resolvedDeps: any[] = [];
       if (dependencies) {
         for (let i = 0; i < dependencies.length; i++) {
           let dep = dependencies[i];
@@ -227,8 +227,8 @@ export class ContainerResolver {
    * @param definition
    * @returns {Array<any>}
    */
-  private resolveConstructorArgumentsFromDefinition(definition: Definition): Array<any> {
-    let constructorArgs = definition.constructorArgs;
+  private resolveConstructorArgumentsFromDefinition(definition: Definition): Array<any> | undefined {
+    let constructorArgs: any[] | undefined = definition.constructorArgs;
     if (!constructorArgs && this.definitions.has(definition.definitionConstructor) && (definition.definitionConstructor != definition.key)) {
       constructorArgs = this.resolveConstructorArgumentsFromDefinition(this.definitions.get(definition.definitionConstructor));
     }
