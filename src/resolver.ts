@@ -40,7 +40,7 @@ export class ContainerResolver {
    * @returns {Definition|V}
    */
   public getDefinition(key): Definition {
-    return this.definitions.get(key);
+    return this.definitions.get(key) as Definition;
   }
 
   /**
@@ -66,7 +66,7 @@ export class ContainerResolver {
       let factoryProxy = new FactoryAutoProxy(this, definition);
       internalDefinition = new Definition(definition, factoryProxy, undefined, FactoryMethod.OBJECT);
     } else {
-      internalDefinition = this.definitions.get(definition);
+      internalDefinition = this.definitions.get(definition) as Definition;
     }
 
     if (!internalDefinition) {
@@ -170,7 +170,7 @@ export class ContainerResolver {
     let constructor = definition.definitionConstructor;
 
     if (this.definitions.has(constructor) && constructor != definition.key) {
-      constructor = this.resolveConstructor(this.definitions.get(constructor));
+      constructor = this.resolveConstructor(this.definitions.get(constructor) as Definition);
     }
     return constructor;
   }
@@ -230,7 +230,7 @@ export class ContainerResolver {
   private resolveConstructorArgumentsFromDefinition(definition: Definition): Array<any> | undefined {
     let constructorArgs: any[] | undefined = definition.constructorArgs;
     if (!constructorArgs && this.definitions.has(definition.definitionConstructor) && (definition.definitionConstructor != definition.key)) {
-      constructorArgs = this.resolveConstructorArgumentsFromDefinition(this.definitions.get(definition.definitionConstructor));
+      constructorArgs = this.resolveConstructorArgumentsFromDefinition(this.definitions.get(definition.definitionConstructor) as Definition);
     }
     return constructorArgs;
   }
